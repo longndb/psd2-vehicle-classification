@@ -33,7 +33,7 @@ app = FastAPI(
     description="""
 ## Vehicle Transportation Mode Classification API
 
-This API predicts the mode of transportation (bike, bus, or car) from accelerometer sensor data.
+This API predicts the mode of transportation (bike or car) from accelerometer sensor data.
 
 ### Features
 - **CSV Upload**: Upload sensor data in CSV format
@@ -134,7 +134,7 @@ The CSV must contain columns: `time`, `ax`, `ay`, `az`
 Returns:
 - Overall prediction based on majority voting
 - Per-segment predictions with probability distributions
-- Distribution of predictions across all modes (bike, bus, car)
+- Distribution of predictions across all modes (bike, car)
 """
 )
 async def predict(

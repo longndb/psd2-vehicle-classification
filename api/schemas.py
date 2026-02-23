@@ -7,7 +7,6 @@ from pydantic import BaseModel, Field
 class ProbabilityDistribution(BaseModel):
     """Probability distribution across all classes."""
     bike: float = Field(..., ge=0, le=1, description="Probability of bike")
-    bus: float = Field(..., ge=0, le=1, description="Probability of bus")
     car: float = Field(..., ge=0, le=1, description="Probability of car")
 
 
@@ -17,14 +16,14 @@ class SegmentPrediction(BaseModel):
     time_start: float = Field(..., description="Segment start time in seconds")
     time_end: float = Field(..., description="Segment end time in seconds")
     label: str = Field(..., description="Predicted transportation mode")
-    label_id: int = Field(..., ge=0, le=2, description="Label ID (0=bike, 1=bus, 2=car)")
+    label_id: int = Field(..., ge=0, le=1, description="Label ID (0=bike, 1=car)")
     probabilities: ProbabilityDistribution = Field(..., description="Class probabilities")
 
 
 class OverallPrediction(BaseModel):
     """Overall prediction based on majority voting."""
     label: str = Field(..., description="Most common transportation mode")
-    label_id: int = Field(..., ge=0, le=2, description="Label ID of most common mode")
+    label_id: int = Field(..., ge=0, le=1, description="Label ID of most common mode")
     confidence: float = Field(..., ge=0, le=1, description="Percentage of segments with this label")
 
 
@@ -37,7 +36,6 @@ class ModeCount(BaseModel):
 class ModeDistribution(BaseModel):
     """Distribution of predictions across all modes."""
     bike: ModeCount = Field(..., description="Bike statistics")
-    bus: ModeCount = Field(..., description="Bus statistics")
     car: ModeCount = Field(..., description="Car statistics")
 
 
@@ -57,7 +55,7 @@ class PredictionResponse(BaseModel):
                 "window_seconds": 2.0,
                 "total_segments": 75,
                 "overall_prediction": {
-                    "label": "bus",
+                    "label": "car",
                     "label_id": 1,
                     "confidence": 0.85
                 },
@@ -66,23 +64,22 @@ class PredictionResponse(BaseModel):
                         "segment_id": 0,
                         "time_start": 0.0,
                         "time_end": 2.0,
-                        "label": "bus",
-                        "label_id": 1,
-                        "probabilities": {"bike": 0.05, "bus": 0.90, "car": 0.05}
+                        "label": "bike",
+                        "label_id": 0,
+                        "probabilities": {"bike": 0.90, "car": 0.10}
                     },
                     {
                         "segment_id": 1,
                         "time_start": 2.0,
                         "time_end": 4.0,
                         "label": "car",
-                        "label_id": 2,
-                        "probabilities": {"bike": 0.02, "bus": 0.18, "car": 0.80}
+                        "label_id": 1,
+                        "probabilities": {"bike": 0.20, "car": 0.80}
                     }
                 ],
                 "mode_distribution": {
                     "bike": {"count": 5, "percentage": 6.67},
-                    "bus": {"count": 60, "percentage": 80.0},
-                    "car": {"count": 10, "percentage": 13.33}
+                    "car": {"count": 70, "percentage": 93.33}
                 }
             }
         }

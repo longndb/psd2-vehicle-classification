@@ -26,7 +26,7 @@ RUN pip install --no-cache-dir -r requirements-api.txt
 # Copy source code
 COPY src/ ./src/
 COPY api/ ./api/
-COPY results/convolutional_neural_network/averaged_model/best_model.pth ./results/convolutional_neural_network/averaged_model/best_model.pth
+COPY models/kaggle/cnn/averaged_model/best_model.pth ./results/convolutional_neural_network/averaged_model/best_model.pth
 
 # Create non-root user for security
 RUN useradd --create-home --shell /bin/bash appuser && \
@@ -49,4 +49,3 @@ CMD exec gunicorn api.main:app \
     --keep-alive 5 \
     --access-logfile - \
     --error-logfile -
-

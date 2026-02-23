@@ -22,8 +22,8 @@ from src.utils.data import WINDOW_SIZE, SENSOR_RATE
 logger = logging.getLogger("vehicle-api.predictor")
 
 # Label mapping
-LABEL_MAP = {0: "bike", 1: "bus", 2: "car"}
-LABEL_TO_ID = {"bike": 0, "bus": 1, "car": 2}
+LABEL_MAP = {0: "bike", 1: "car"}
+LABEL_TO_ID = {"bike": 0, "car": 1}
 REQUIRED_COLUMNS = ["time", "ax", "ay", "az"]
 
 # Default model path
@@ -119,7 +119,7 @@ class VehiclePredictor:
         if not self.model_path.exists():
             raise FileNotFoundError(f"Model not found at {self.model_path}")
         
-        self.model = ConvolutionalNeuralNetwork(input_channels=3, num_classes=3)
+        self.model = ConvolutionalNeuralNetwork(input_channels=3, num_classes=2)
         state_dict = torch.load(self.model_path, map_location=self.device, weights_only=True)
         self.model.load_state_dict(state_dict)
         self.model.to(self.device)
@@ -230,8 +230,7 @@ class VehiclePredictor:
                 "label_id": int(label_id),
                 "probabilities": {
                     "bike": float(probs[0]),
-                    "bus": float(probs[1]),
-                    "car": float(probs[2])
+                    "car": float(probs[1])
                 }
             })
         
@@ -274,4 +273,3 @@ def get_predictor() -> VehiclePredictor:
     if _predictor is None:
         _predictor = VehiclePredictor()
     return _predictor
-

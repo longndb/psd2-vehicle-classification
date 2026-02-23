@@ -39,13 +39,9 @@ notebooks/
 results/neural_network/
 results/convolutional_neural_network/seed_*/
 
-# Models directory (using results instead)
-models/
-
 # Documentation
 *.md
 !README.md
 
 # Environment
 environment.yaml
-
